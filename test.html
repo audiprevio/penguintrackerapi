@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet Map Test</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body>
+  <div id="map" style="height: 100vh;"></div>
+
+  <script>
+    var penguinData = [
+      {
+        penguinName: 'Emperor Penguin',
+        lastPosition: {
+          type: 'Polygon',
+          coordinates: [
+            [-74.698477, 164.110744],
+            [-77.848848, 166.674230],
+            [-77.934214, 169.449121],
+            [-77.854419, 167.114012],
+            [-77.265978, 168.710413],
+            [-77.505806, 167.969906],
+            [-73.507257, 172.603858],
+            [-76.353912, 176.458007],
+            [-72.770616, 179.072816],
+            [-77.149918, 164.888580]
+          ]
+        },
+        lastUpdate: '2023-08-29',
+        speciesName: 'Emperor Penguin',
+        ageAtTagging: '3 years',
+        taggedPosition: 'Some position',
+        taggedTime: '2023-08-28T10:00:00Z',
+        taggedBy: 'John Doe'
+      },
+      // Add other penguin data objects here
+    ];
+
+    var map = L.map('map').setView([-77.84068826234282, 166.68787351282026], 10);
+
+    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',
+      maxZoom: 10,
+      minZoom: 5
+    }).addTo(map);
+
+    penguinData.forEach(function(penguin) {
+      var coordinates = penguin.lastPosition.coordinates;
+
+      // Create a polygon from the coordinates
+      var polygon = L.polygon(coordinates).addTo(map);
+
+      // Create a marker for each coordinate
+      coordinates.forEach(function(coordinate) {
+        var marker = L.marker(coordinate).addTo(map);
+        marker.bindPopup('<b>' + penguin.penguinName + '</b><br>' + penguin.speciesName);
+      });
+    });
+  </script>
+</body>
+</html>
